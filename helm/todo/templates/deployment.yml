@@ -18,6 +18,6 @@ spec:
               name: "todoapp"
               env:
                 - name: mongodb
-                  value: mongodb://{.Values.username}:{.Values.password}@{{ .Values.dbhost }}
+                  value: {{ .Values.dbhost }}
               ports:
               - containerPort: 27017
