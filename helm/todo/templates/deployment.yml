@@ -20,4 +20,4 @@ spec:
                 - name: mongodb
                   value: {{ .Values.dbhost }}
               ports:
-              - containerPort: 443
+              - containerPort: 27017
