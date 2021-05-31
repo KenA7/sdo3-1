@@ -18,6 +18,6 @@ spec:
               name: "todoapp"
               env:
                 - name: DB_URL
-                  value: {{ .Values.dbhost }}
+                  value: mongodb://AWS:12345678@todo-db-prod-docdb-cluster.cluster-chyox4cuah7f.us-east-1.docdb.amazonaws.com:27017
               ports:
               - containerPort: 27017
