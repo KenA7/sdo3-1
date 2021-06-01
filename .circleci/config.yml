@@ -215,7 +215,7 @@ jobs:
             make up
             terraform output db_endpoint > ../dbhost.txt
             export db_endpoint=mongodb://$(terraform output db_user):$(terraform output db_pass)@$(terraform output db_endpoint):27017 
-            echo $(db_endpoint) > ../dbendpoint.txt
+            echo ${db_endpoint} > ../dbendpoint.txt
       - run:
           name: deploy app
           command: |
