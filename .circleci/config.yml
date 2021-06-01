@@ -191,7 +191,7 @@ jobs:
             cd artifacts/infra
             make init 
             make up
-            export db_endpoint=mongodb://$(terraform output db_user):$(terraform output db_pass)@$(terraform output db_endpoint):27017 
+            export db_endpoint=mongodb://$(terraform output db_user | xargs):$(terraform output db_pass | xargs)@$(terraform output db_endpoint | xargs):27017 
             echo $(db_endpoint) > ../db_endpoint.txt
       - run:
           name: deploy app
