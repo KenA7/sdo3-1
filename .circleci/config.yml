@@ -213,12 +213,13 @@ jobs:
             cd artifacts/infra
             make init 
             make up
+            terraform output db_endpoint > ../dbhost.txt
             export db_endpoint=mongodb://$(terraform output db_user):$(terraform output db_pass)@$(terraform output db_endpoint):27017 
             echo $(db_endpoint) > ../dbendpoint.txt
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt)
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbhost.txt)
   
   smoketest-test:
     docker:
