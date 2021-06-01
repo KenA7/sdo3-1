@@ -4,3 +4,5 @@ dbhost:
 username:
 password:
 dbname: mongodb://
+charcters: ":"
+charcter2: "@"
