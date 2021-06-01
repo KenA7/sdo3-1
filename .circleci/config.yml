@@ -215,7 +215,6 @@ jobs:
             terraform output db_endpoint > ../dbendpoint.txt
             terraform output db_user > ../dbuser.txt
             terraform output db_pass > ../dbpass.txt
-            terraform output db_endpoint
       - run:
           name: deploy app
           command: |
