@@ -42,7 +42,7 @@ commands:
       - run:
           name: Smoke test
           command: |
-            export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            export endpoint=$(kubectl get service/todoapp -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
             echo $endpoint
             export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
             if [ $returncode -ne "200" ]
@@ -120,7 +120,7 @@ jobs:
           name: End 2 end tests
           no_output_timeout: 2m
           command: |
-            export ENDPOINT=http://$(kubectl get service/todo-app -n test -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            export ENDPOINT=http://$(kubectl get service/todoapp -n test -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
             echo $ENDPOINT
             cd src
             npm install
@@ -191,11 +191,12 @@ jobs:
             cd artifacts/infra
             make init 
             make up
-            terraform output db_endpoint > ../db_connection_string.txt
+            export db_endpoint=mongodb://$(terraform output db_user):$(terraform output db_pass)@$(terraform output db_endpoint):27017 
+            echo $(db_endpoint) > ../db_endpoint.txt
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/db_connection_string.txt)
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/db_endpoint.txt)
   
   deploy-prod:
     docker:
@@ -212,13 +213,12 @@ jobs:
             cd artifacts/infra
             make init 
             make up
-            terraform output db_endpoint > ../dbendpoint.txt
-            terraform output db_user > ../dbuser.txt
-            terraform output db_pass > ../dbpass.txt
+            export db_endpoint=mongodb://$(terraform output db_user):$(terraform output db_pass)@$(terraform output db_endpoint):27017 
+            echo $(db_endpoint) > ../dbendpoint.txt
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt),password=$(cat artifacts/dbpass.txt),username=$(cat artifacts/dbuser.txt)
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt)
   
   smoketest-test:
     docker:
@@ -239,7 +239,7 @@ jobs:
       - run:
           name: Smoke test
           command: |
-            export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            export endpoint=$(kubectl get service/todoapp -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
             echo $endpoint
             export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
             if [ $returncode -ne "200" ]
