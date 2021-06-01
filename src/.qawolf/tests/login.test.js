@@ -5,7 +5,7 @@ describe('login', () => {
   let browser;
 
   beforeAll(async () => {
-    browser = await launch({ url: "http://aad14faa18570437186ecec1547e53cb-2046289117.us-east-1.elb.amazonaws.com:443" });
+    browser = await launch({ url: "http://a7c719243dd314535b5a808f5511251c-1697902725.us-east-1.elb.amazonaws.com:443" });
   });
 
   afterAll(() => browser.close());
