@@ -5,7 +5,7 @@ describe('register', () => {
   let browser;
 
   beforeAll(async () => {
-    browser = await launch({ url: "aad14faa18570437186ecec1547e53cb-2046289117.us-east-1.elb.amazonaws.com :443" });
+    browser = await launch({ url: "aad14faa18570437186ecec1547e53cb-2046289117.us-east-1.elb.amazonaws.com:443" });
   });
 
   afterAll(() => browser.close());
